@@ -105,13 +105,13 @@
         for (let i=0; i<strArr.length; i++) {
             let lineNum = (i+1).toString();
             let prefix = lineNum.padStart(pad, ' ') + ": ";
-            let val = adjustForTruncation(strArr[i]);
+            let val = adjustForBitAlignment(strArr[i]);
             s += prefix + val + "\n";
         }
         return s;
     }
 
-    function adjustForTruncation(binaryString) {
+    function adjustForBitAlignment(binaryString) {
         let adjustedBinStr = binaryString;
         if (alignment == "lsb" && binaryString.length == bitsFloor) {
             adjustedBinStr = " " + adjustedBinStr;
@@ -232,17 +232,19 @@
         // accumulate the results for each sample
         let ceilSampleCount = 0;
         for (let i=0; i<base2samples.length; i++) {
-            let sample = adjustForTruncation(base2samples[i]);
+            let sample = base2samples[i];
             // record if this is a long or a short sample
             if (sample.length == bitsCeil) {
                 ceilSampleCount += 1;
             }
-            for (let j=0; j<sample.length; j++) {
+            // adjust for bit alignment
+            let adjustedSample = adjustForBitAlignment(base2samples[i]);
+            for (let j=0; j<adjustedSample.length; j++) {
                 // record if this has bit i as a 0 or a 1
-                if (sample[j] == "1") {
+                if (adjustedSample[j] == "1") {
                     onesAtBitPos[j] += 1;
                 }
-                if (sample[j] != " ") {
+                if (adjustedSample[j] != " ") {
                     samplesAtBitPos[j] += 1;
                 }
             }
